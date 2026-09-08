@@ -1,9 +1,13 @@
-region               = "us-west-2"
-cluster_name         = "linuxtips-ecs-cluster"
-service_name         = "chip"
-service_port         = 8080
-service_cpu          = 256
-service_memory       = 512
+region         = "us-west-2"
+cluster_name   = "linuxtips-ecs-cluster"
+service_name   = "chip"
+service_port   = 8080
+service_cpu    = 256
+service_memory = 512
+
+service_launch_type = "EC2"
+service_task_count  = 2
+
 ssm_vpc_id           = "/linuxtips-vpc/vpc/vpc_id"
 ssm_listener         = "/linuxtips/ecs/lb/listener"
 ssm_private_subnet_1 = "/linuxtips-vpc/vpc/subnet_private_1a"
@@ -21,3 +25,17 @@ environment_variables = [
 ]
 
 capabilities = ["EC2"]
+
+service_healthcheck = {
+  healthcheck_threshold = 3
+  unhealthy_threshold   = 10
+  timeout               = 10 # 10 seconds
+  interval              = 60 # 60 seconds -> tambem conhecido como 1 minuto
+  matcher               = "200-399"
+  path                  = "/healthcheck"
+  port                  = 8080
+}
+
+service_hosts = [
+  "chip.linuxtips.demo"
+]
